@@ -1,3 +1,4 @@
+
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "./App.css";
 import Image0 from "./Image/Image0.jpg";
@@ -11,7 +12,7 @@ import Image7 from "./Image/Image7.jpg";
 
 import { useState } from "react";
 
-function App() {
+function Images() {
   const Images = [
     Image0,
     Image1,
@@ -23,20 +24,17 @@ function App() {
     Image7,
   ];
 
-  const [count, setCount] = useState(0);
+  const [current, setCurrent] = useState(0);
 
-  const [image, setImage] = useState(Images[0]);
+  function nextSlide() {
+    setCurrent(current === Images.length - 1 ? 0 : current + 1);
+  }
 
-  const handelClickLeft = () => {
-    count === 0
-      ? (setCount(Images.length - 1), setImage(Images[Images.length - 1]))
-      : (setCount(count - 1), setImage(Images[count - 1]));
-  };
-  const handelClickRight = () => {
-    count === Images.length - 1
-      ? (setCount(0), setImage(Images[0]))
-      : (setCount(count + 1), setImage(Images[count + 1]));
-  };
+  function prevSlide() {
+    setCurrent(current === 0 ? Images.length - 1 : current - 1);
+  }
+
+  
 
   return (
     <>
@@ -45,15 +43,23 @@ function App() {
         <div className=" flex justify-center items-center mt-10">
           <button
             className="h-12 w-12 flex justify-center items-center"
-            onClick={handelClickLeft}
+            onClick={nextSlide}
           >
             <FaArrowLeft />
           </button>
-          <img src={image} alt="" className="h-96" />
-          <p>{count}</p>
+          
+          {Images.map(
+          (image, index) =>
+            current === index &&(
+              <div key={image} className="slide">
+                <img src={image} alt="images" className="h-96"/>
+              </div>
+            )
+        )}
+          
           <button
             className="h-12 w-12 flex justify-center items-center"
-            onClick={handelClickRight}
+            onClick={prevSlide}
           >
             <FaArrowRight />
           </button>
@@ -63,4 +69,4 @@ function App() {
   );
 }
 
-export default App;
+export default Images;
