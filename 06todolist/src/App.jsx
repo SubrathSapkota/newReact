@@ -1,11 +1,11 @@
 import { useState } from "react";
+import Confirmclear from "./Confirmclear";
 
 const App = () => {
   const [todos, setTodos] = useState([]);
 
   const generateUniqueId = () => {
-
-    return  Math.random().toString(36).substr(2, 9);
+    return Math.random().toString(36).substr(2, 9);
   };
 
   const [inputValue, setInputValue] = useState({
@@ -15,6 +15,8 @@ const App = () => {
   });
 
   const [updateTodos, setUpdateTodos] = useState(null);
+
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
   const handleValueChange = (e) => {
     setInputValue({ ...inputValue, [e.target.name]: e.target.value });
@@ -32,10 +34,9 @@ const App = () => {
       setTodos(newUpdateTodos);
       setUpdateTodos(null);
     } else {
-      setTodos([...todos,{ ...inputValue,id: generateUniqueId()} ]);
+      setTodos([...todos, { ...inputValue, id: generateUniqueId() }]);
     }
     console.log(todos);
-   
   };
 
   const handleDelete = (index) => {
@@ -58,9 +59,18 @@ const App = () => {
     setTodos(newTodosCheck);
   };
 
+  const handleClearAll = () => {
+    // const idConfirmed = window.confirm("Are you sure you want to clear all?");
+    // if (idConfirmed) {
+    //   setTodos([]);
+    // }
+    setIsConfirmationOpen(!isConfirmationOpen);
+    console.log(isConfirmationOpen);
+  };
+
   return (
     <div className="w-full h-screen bg-gray-500 flex justify-center items-center ">
-      <div className="w-[80%] h-[85%] bg-slate-600 rounded-[30px] flex items-center flex-col">
+      <div className="w-[80%] h-[85%] bg-slate-600 rounded-[30px] relative flex items-center flex-col">
         <h1 className="text-white text-4xl font-bold mt-5">ToDo List</h1>
         <div className="w-full px-12 my-8 flex justify-between">
           <input
@@ -120,7 +130,23 @@ const App = () => {
             </div>
           ))}
         </div>
+        <button
+          className="bg-red-600 text-white py-1 px-4 w-[120px] h-[40px] text-lg font-bold rounded-xl absolute bottom-2 right-2 hover:bg-red-700 "
+          onClick={handleClearAll}
+        >
+          Clear All
+        </button>
       </div>
+      {isConfirmationOpen && (
+        <Confirmclear
+          isOpen={isConfirmationOpen}
+          onClose={() => setIsConfirmationOpen(false)}
+          onConfirm={() => {
+            setTodos([]);
+            setIsConfirmationOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 };
